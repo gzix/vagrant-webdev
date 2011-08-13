@@ -6,6 +6,7 @@ Vagrant Environment for Web Development
 2. Ruby
 3. Gems
 4. Puppet
+5. Git
 
 ## Update VBoxGuestAdditions
 

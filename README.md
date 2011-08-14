@@ -1,7 +1,6 @@
-Vagrant Environment for Web Development
----------------------------------------
+# Vagrant Environment for Web Development
 
-__This is just the beginning I'm trying to set my own Vagrant Environment for Web Development and manage all server configurations with Chef or Puppet.__
+__This is just the beginning.__ I'm trying to set my own Vagrant Environment for Web Development and manage all server configurations with Chef or Puppet.__
 
 ## Prerequisite
 

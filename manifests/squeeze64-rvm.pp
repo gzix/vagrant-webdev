@@ -12,9 +12,3 @@ file { '/etc/motd':
 group { "rvm":
   ensure => "present",
 }
-
-# Change Hostname
-file { '/etc/hostname':
-  content => "webdev"
-}
-

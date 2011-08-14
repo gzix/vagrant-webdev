@@ -28,3 +28,4 @@ __This is just the beginning I'm trying to set my own Vagrant Environment for We
 6. `sudo sh /vagrant/UPDATE.run`
 
 7. `vagrant reload`
+8. `vagrant ssh`

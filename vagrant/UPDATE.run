@@ -3,9 +3,9 @@
 # This up script is required before we can use Puppet or Chef 
 # to work properly with Vagrant debian-squeeze-64-rvm.box.
 
-sudo echo "web.dev" > /etc/hostname
+sudo echo "webdev" > /etc/hostname
 sudo hostname -F /etc/hostname
-echo "[DONE] Change hostname to web.dev"
+echo "[DONE] Change hostname to webdev"
 
 # Create new sources.list /etc/apt/sources.list
 sudo mv /etc/apt/sources.list /etc/apt/sources.list.old

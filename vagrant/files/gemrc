@@ -1,0 +1,4 @@
+---
+:sources:
+- http://gems.webzer.net/
+gem: --no-rdoc --no-ri

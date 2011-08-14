@@ -1,0 +1,101 @@
+#!/bin/bash
+
+# This up script is required before we can use Puppet or Chef 
+# to work properly with Vagrant debian-squeeze-64-rvm.box.
+
+# Create new sources.list /etc/apt/sources.list
+sudo mv /etc/apt/sources.list /etc/apt/sources.list.old
+echo "[DONE] Backup /etc/apt/sources.list to /etc/apt/sources.list.old"
+
+# Change apt sources.list to Thai mirror.
+# To-do: Make other mirrors selectable
+echo "
+deb http://ftp.th.debian.org/debian/ squeeze main
+deb-src http://ftp.th.debian.org/debian/ squeeze main
+
+deb http://security.debian.org/ squeeze/updates main
+deb-src http://security.debian.org/ squeeze/updates main
+
+# squeeze-updates, previously known as 'volatile'
+deb http://ftp.th.debian.org/debian/ squeeze-updates main
+deb-src http://ftp.th.debian.org/debian/ squeeze-updates main
+" > /etc/apt/sources.list
+echo "[DONE] Change apt sources.list to Thai mirror."
+
+sudo apt-get update
+echo "[DONE] Update apt sources."
+
+sudo apt-get -y upgrade --show-upgraded
+echo "[DONE] Upgrate all installed softwares."
+
+# For rvm new version
+sudo apt-get install build-essential bison openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-0 libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake
+echo "[DONE] Install essential softwares required by RVM."
+
+# Make sure we get RVM correct path
+export rvm_path="/usr/local/rvm"
+export rvm_gem_options="--no-rdoc --no-ri -V"
+
+# Automatically trust project .rvmrc files
+export rvm_trust_rvmrcs_flag=1
+export rvm_always_trust_rvmrc_flag
+sudo cp /vagrant/files/gemrc /etc/gemrc
+echo "[DONE] Set RVM Environment for Bash Shell."
+
+# To-do: Create /etc/gemrc file, content is like this
+# ---
+# :sources:
+# - http://gems.webzer.net/
+# gem: --no-rdoc --no-ri
+
+# Temporarily add gems proxy & remove rubygems.org to prevent timeout issue.
+rvm gem sources -a http://gems.webzer.net
+rvm gem sources -r http://rubygems.org/
+echo "[DONE] Temporarily add gems proxy & remove rubygems.org to prevent timeout issue."
+
+rvm remove 1.9.2
+echo "[DONE] Remove old Ruby 1.9.2."
+
+rvm get head
+rvm reload
+echo "[DONE] RVM was updated."
+
+rvm install 1.9.2
+rvm 1.9.2 --default
+echo "[DONE] Install new Ruby 1.9.2 and use it as default."
+
+rvm gem update --system $rvm_gem_options
+echo "[DONE] Update rubygems-update."
+
+rvm gem update $rvm_gem_options
+echo "[DONE] Update all installed gems."
+
+rvm gem install puppet $rvm_gem_options
+echo "[DONE] Install puppet gem."
+
+rvm gem install chef $rvm_gem_options
+echo "[DONE] Install chef gem."
+
+# Set gem sources back to default.
+rvm gem sources -r http://gems.webzer.net
+rvm gem sources -a http://rubygems.org/
+echo "[DONE] Set gem sources back to default."
+
+sudo mount /dev/cdrom /media/cdrom
+sudo sh /media/cdrom/VBoxLinuxAdditions.run
+sudo umount /dev/cdrom
+echo "[DONE] Install new VBoxLinuxAdditions."
+
+## To-do: download Additions CD & mount automatically
+# sudo wget -c http://download.virtualbox.org/virtualbox/4.1.0/VBoxGuestAdditions_4.1.0.iso -O VBoxGuestAdditions_4.1.0.iso
+
+sudo apt-get -y autoremove
+sudo aptitude -y purge ~c
+sudo apt-get -y clean
+echo "[DONE] Cleanup apt sources"
+
+mv /vagrant/Vagrantfile /vagrant/backup/Vagrantfile.bak
+cp /vagrant/files/Vagrantfile.puppet /vagrant/Vagrantfile
+echo "[DONE] Backup initial Vagrantfile to Vagrantfile.bak"
+
+sudo halt

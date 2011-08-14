@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Make sure we get RVM correct path
+export rvm_path="/usr/local/rvm"
+export rvm_gem_options="--no-rdoc --no-ri -V"
+# Automatically trust project .rvmrc files
+export rvm_trust_rvmrcs_flag=1
+export rvm_always_trust_rvmrc_flag
+
+# Temporarily add gems proxy & remove rubygems.org to prevent timeout issue.
+rvm gem sources -a http://gems.webzer.net
+rvm gem sources -r http://rubygems.org/
+echo -e $BLUE"[DONE] Temporarily add gems proxy & remove rubygems.org to prevent timeout issue."
+
+rvm gem update --system $rvm_gem_options
+echo "[DONE] Update rubygems-update."
+
+# Set gem sources back to default.
+rvm gem sources -r http://gems.webzer.net
+rvm gem sources -a http://rubygems.org/
+echo "[DONE] Set gem sources back to default."
+
+# Test VBoxLinuxAdditions mount
+sudo mount /dev/cdrom /media/cdrom
+sudo umount /dev/cdrom
